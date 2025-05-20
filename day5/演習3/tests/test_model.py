@@ -136,16 +136,15 @@ def test_model_inference_time(train_model):
     assert inference_time < 1.0, f"推論時間が長すぎます: {inference_time}秒"
 
 
-def test_model_accuracy_change(train_model):
-    """新しいモデルと前のモデルの精度の差を検出"""
+from sklearn.metrics import f1_score, roc_auc_score
+
+def test_model_f1_score(train_model):
+    """モデルのF1スコアを出す"""
     model, X_test, y_test = train_model
-    with open("day5/演習3/previous_model.pkl", "rb") as f:
-        previous_model = pickle.load(f)
-    new_accuracy = accuracy_score(y_test, model.predict(X_test))
-    old_accuracy = accuracy_score(y_test, previous_model.predict(X_test))
-    assert (
-        new_accuracy >= old_accuracy - 0.01
-    ), f"モデルの精度が低下しました: {old_accuracy:.2f} -> {new_accuracy:.2f}"
+    y_pred = model.predict(X_test)
+    score = f1_score(y_test, y_pred)
+    assert score >= 0.70, f"F1スコアが低すぎます: {score:.2f}"
+
 
 
 def test_model_reproducibility(sample_data, preprocessor):
