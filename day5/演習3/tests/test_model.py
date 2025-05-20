@@ -138,13 +138,13 @@ def test_model_inference_time(train_model):
 
 from sklearn.metrics import f1_score, roc_auc_score
 
+
 def test_model_f1_score(train_model):
     """モデルのF1スコアを出す"""
     model, X_test, y_test = train_model
     y_pred = model.predict(X_test)
     score = f1_score(y_test, y_pred)
     assert score >= 0.70, f"F1スコアが低すぎます: {score:.2f}"
-
 
 
 def test_model_reproducibility(sample_data, preprocessor):
