@@ -136,16 +136,6 @@ def test_model_inference_time(train_model):
     # 推論時間が1秒未満であることを確認
     assert inference_time < 1.0, f"推論時間が長すぎます: {inference_time}秒"
 
-
-def test_model_reproducibility(sample_data, preprocessor):
-    """モデルの再現性を検証"""
-    # データの分割
-    X = sample_data.drop("Survived", axis=1)
-    y = sample_data["Survived"].astype(int)
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-
 def test_model_accuracy_change(train_model):
     """新しいモデルと前のモデルの精度の差を検出"""
     model, X_test, y_test = train_model
@@ -155,6 +145,15 @@ def test_model_accuracy_change(train_model):
     old_accuracy = accuracy_score(y_test, previous_model.predict(X_test))
     assert new_accuracy >= old_accuracy - 0.01, f"モデルの精度が低下しました: {old_accuracy:.2f} -> {new_accuracy:.2f}"
 
+
+def test_model_reproducibility(sample_data, preprocessor):
+    """モデルの再現性を検証"""
+    # データの分割
+    X = sample_data.drop("Survived", axis=1)
+    y = sample_data["Survived"].astype(int)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     # 同じパラメータで２つのモデルを作成
     model1 = Pipeline(
@@ -170,7 +169,6 @@ def test_model_accuracy_change(train_model):
             ("classifier", RandomForestClassifier(n_estimators=100, random_state=42)),
         ]
     )
-
     # 学習
     model1.fit(X_train, y_train)
     model2.fit(X_train, y_train)
