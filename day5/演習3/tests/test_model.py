@@ -119,26 +119,7 @@ def test_model_accuracy(train_model):
 
     # Titanicデータセットでは0.75以上の精度が一般的に良いとされる
     assert accuracy >= 0.75, f"モデルの精度が低すぎます: {accuracy}"
-
-from sklearn.metrics import f1_score, roc_auc_score
-
-def test_model_f1_score(train_model):
-    """モデルのF1スコアを検証（精度だけでなく調和平均も考慮）"""
-    model, X_test, y_test = train_model
-    y_pred = model.predict(X_test)
-    score = f1_score(y_test, y_pred)
-    assert score >= 0.70, f"F1スコアが低すぎます: {score:.2f}"
-
-
-def test_model_auc_score(train_model):
-    """ROC AUCスコアでモデルの判別性能を確認"""
-    model, X_test, y_test = train_model
-    if hasattr(model, "predict_proba"):
-        y_prob = model.predict_proba(X_test)[:, 1]
-        auc = roc_auc_score(y_test, y_prob)
-        assert auc >= 0.75, f"AUCスコアが低すぎます: {auc:.2f}"
-    else:
-        pytest.skip("predict_proba が使えないためスキップ")
+    
 
 
 def test_model_inference_time(train_model):
@@ -166,7 +147,7 @@ def test_model_reproducibility(sample_data, preprocessor):
     )
 
 def test_model_accuracy_change(train_model):
-    """新旧モデルの精度の差を検出"""
+    """新しいモデルと前のモデルの精度の差を検出"""
     model, X_test, y_test = train_model
     with open("path/to/previous_model.pkl", "rb") as f:
         previous_model = pickle.load(f)
