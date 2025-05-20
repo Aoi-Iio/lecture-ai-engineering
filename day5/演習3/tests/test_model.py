@@ -139,7 +139,7 @@ def test_model_inference_time(train_model):
 def test_model_accuracy_change(train_model):
     """新しいモデルと前のモデルの精度の差を検出"""
     model, X_test, y_test = train_model
-    with open("path/to/previous_model.pkl", "rb") as f:
+    with open("day5/演習3/previous_model.pkl", "rb") as f:
         previous_model = pickle.load(f)
     new_accuracy = accuracy_score(y_test, model.predict(X_test))
     old_accuracy = accuracy_score(y_test, previous_model.predict(X_test))
