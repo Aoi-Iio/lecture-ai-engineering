@@ -119,6 +119,7 @@ def test_model_accuracy(train_model):
 
     # Titanicデータセットでは0.75以上の精度が一般的に良いとされる
     assert accuracy >= 0.75, f"モデルの精度が低すぎます: {accuracy}"
+    
 
 
 def test_model_inference_time(train_model):
@@ -144,6 +145,16 @@ def test_model_reproducibility(sample_data, preprocessor):
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
+
+def test_model_accuracy_change(train_model):
+    """新しいモデルと前のモデルの精度の差を検出"""
+    model, X_test, y_test = train_model
+    with open("path/to/previous_model.pkl", "rb") as f:
+        previous_model = pickle.load(f)
+    new_accuracy = accuracy_score(y_test, model.predict(X_test))
+    old_accuracy = accuracy_score(y_test, previous_model.predict(X_test))
+    assert new_accuracy >= old_accuracy - 0.01, f"モデルの精度が低下しました: {old_accuracy:.2f} -> {new_accuracy:.2f}"
+
 
     # 同じパラメータで２つのモデルを作成
     model1 = Pipeline(
